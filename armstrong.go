@@ -1,5 +1,18 @@
 // Based on https://www.kluenter.de/garmin-ephemeris-files-and-linux/ and
 // EPO_Downloader.rb in https://github.com/scrapper/postrunner (GPLv2)
+
+// = EPO_Downloader.rb -- PostRunner - Manage the data from your Garmin sport devices.
+//
+// Copyright (c) 2015 by Chris Schlaeger <cs@taskjuggler.org>
+//
+// armstrong.go
+//
+// Copyright (c) 2016 by Steven Maude
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of version 2 of the GNU General Public License as
+// published by the Free Software Foundation.
+
 package main
 
 import (
