@@ -26,7 +26,20 @@ without any dependencies.
 
 ## Usage
 
-`go build armstrong.go` and then just run the `armstrong` binary.
+### Build
+
+With Go installed:
+
+* `go build armstrong.go`
+
+Or, use the `Dockerfile` via `make`:
+
+* `make build`
+
+### Run
+
+Just run the compiled `armstrong` binary. `EPO.BIN` should be generated
+in the same directory.
 
 ## Credits
 
