@@ -79,11 +79,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = ioutil.WriteFile("raw", rawEPOData, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	outData := cleanEPO(rawEPOData)
 
 	err = ioutil.WriteFile("EPO.BIN", outData, 0644)
