@@ -26,6 +26,12 @@ without any dependencies.
 
 ## Usage
 
+### Download
+
+If you don't want to build from source, [Linux
+releases](https://github.com/StevenMaude/armstrong/releases) are built
+from tagged versions via GitHub Actions.
+
 ### Build
 
 With Go installed:
