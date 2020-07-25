@@ -1,0 +1,59 @@
+on:
+  push:
+    tags:
+    - 'v*'
+
+name: Build and release binary
+
+jobs:
+  build:
+    name: Build and release binary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build code
+        run: |
+          make build
+
+      - name: Rename binary
+        run: |
+          mv ./armstrong ./armstrong_linux_amd64
+
+      - name: Calculate SHA256
+        run: |
+          sha256sum ./armstrong_linux_amd64 > SHA256SUMS
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+
+      - name: Upload Linux binary to GitHub
+        id: upload-linux-binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./armstrong_linux_amd64
+          asset_name: armstrong_linux_amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload SHA256SUMS to GitHub
+        id: upload-sha256sums
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./SHA256SUMS
+          asset_name: SHA256SUMS
+          asset_content_type: text/plain
