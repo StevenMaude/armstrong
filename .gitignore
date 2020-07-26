@@ -1,5 +1,6 @@
-# Compiled binary
-/armstrong
+# Compiled binaries
+/armstrong_linux_amd64
+/armstrong.exe
 
 # Output files
 /EPO.BIN

@@ -16,8 +16,8 @@ jobs:
 
       - name: Build code
         run: |
-          make build
+          make build-linux
 
       - name: Run code
         run: |
-          ./armstrong
+          ./armstrong_linux_amd64

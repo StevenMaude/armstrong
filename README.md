@@ -28,23 +28,24 @@ without any dependencies.
 
 ### Download
 
-If you don't want to build from source, [Linux
-releases](https://github.com/StevenMaude/armstrong/releases) are built
+If you don't want to build from source, [Linux and Windows
+binaries](https://github.com/StevenMaude/armstrong/releases) are built
 from tagged versions via GitHub Actions.
 
 ### Build
 
 With Go installed:
 
-* `go build armstrong.go`
+* `go build` or `go install`
 
 Or, use the `Dockerfile` via `make`:
 
-* `make build`
+* `make build-linux` (for a Linux build)
+* `make build-windows` (for a Windows build)
 
 ### Run
 
-Just run the compiled `armstrong` binary. `EPO.BIN` should be generated
+Just run the compiled binary. `EPO.BIN` should be generated
 in the same directory.
 
 ## Credits
