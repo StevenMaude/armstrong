@@ -13,17 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build code
+      - name: Build Linux binary
         run: |
-          make build
+          make build-linux
 
-      - name: Rename binary
+      - name: Build Windows binary
         run: |
-          mv ./armstrong ./armstrong_linux_amd64
+          make build-windows
 
       - name: Calculate SHA256
         run: |
-          sha256sum ./armstrong_linux_amd64 > SHA256SUMS
+          sha256sum armstrong_linux_amd64 armstrong.exe > SHA256SUMS
 
       - name: Create Release
         id: create_release
@@ -45,6 +45,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
           asset_path: ./armstrong_linux_amd64
           asset_name: armstrong_linux_amd64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows binary to GitHub
+        id: upload-windows-binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./armstrong.exe
+          asset_name: armstrong.exe
           asset_content_type: application/octet-stream
 
       - name: Upload SHA256SUMS to GitHub
