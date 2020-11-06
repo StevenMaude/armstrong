@@ -24,6 +24,11 @@ complete application which also uses Ruby. However, this code can be
 compiled into a standalone binary, for different platforms, and then run
 without any dependencies.
 
+## Don't want to run at all?
+
+This [repository](https://github.com/StevenMaude/epo-bin) hosts a daily
+download of `EPO.BIN`.
+
 ## Usage
 
 ### Download
