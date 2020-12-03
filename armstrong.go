@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 // retrieveData makes a HTTP request to get Garmin EPO data and returns the body as []byte if successful.
@@ -31,7 +32,10 @@ func retrieveData() ([]byte, error) {
 		"\u0012601 Service Pack 1\u0012\n\b\x8C\xB4\x93\xB8" +
 		"\u000E\u0012\u0000\u0018\u0000\u0018\u001C\"\u0000")
 
-	resp, err := http.Post(url, "application/octet-stream", bytes.NewBuffer(data))
+	c := &http.Client{
+		Timeout: 20 * time.Second,
+	}
+	resp, err := c.Post(url, "application/octet-stream", bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
