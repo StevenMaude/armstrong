@@ -2,7 +2,7 @@
 
 ## About
 
-Retrieve EPO.BIN GPS data from MediaTek's servers on any platform that you
+Retrieve EPO.BIN and CPE.BIN GPS data from MediaTek's servers on any platform that you
 can compile a Go binary for, rather than only those that support Garmin
 Connect. Since Garmin's software doesn't run natively on Linux, it's
 useful there.
@@ -11,8 +11,11 @@ EPO.BIN is GPS Extended Prediction Orbit (EPO) satellite data valid for
 7 days, used to help speed up GPS locking on Garmin devices that support
 this.
 
-For Forerunner devices, the file should be copied to
-`GARMIN/REMOTESW/EPO.BIN` on the watch. 
+CPE.BIN is similar to EPO.BIN and used for some Sony GPS chipsets.
+
+For Forerunner and Vivoactive devices, the file should be copied to the following folder on the watch.
+- EPO: `GARMIN/REMOTESW/EPO.BIN`
+- CPE: `Primary/GARMIN/RemoteSW/CPE.BIN`
 
 ## Alternatives
 
@@ -30,6 +33,7 @@ This [repository](https://github.com/StevenMaude/epo-bin) hosts a daily
 download of `EPO.BIN`.
 
 ## Usage
+Use the `-cpe` flag to download CPE data instead of EPO
 
 ### Download
 

@@ -23,14 +23,15 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"flag"
 )
 
 // Garmin forum post:
 // "…each EPO SET is 2304 bytes"
 const epoLength = 2304
 
-// retrieveData makes a HTTP request to get data and returns the body as []byte if successful.
-func retrieveData() ([]byte, error) {
+// retrieveDataEPO makes a HTTP request to get data and returns the body as []byte if successful.
+func retrieveDataEPO() ([]byte, error) {
 	url := "https://epodownload.mediatek.com/EPO.DAT"
 
 	c := &http.Client{
@@ -49,8 +50,8 @@ func retrieveData() ([]byte, error) {
 	return body, nil
 }
 
-// checkDataLength checks the EPO data length; if not as expected, returns an error.
-func checkDataLength(data []byte) error {
+// checkDataLengthEPO checks the EPO data length; if not as expected, returns an error.
+func checkDataLengthEPO(data []byte) error {
 	dataLength := len(data)
 	if dataLength != 120*epoLength {
 		return fmt.Errorf("EPO data has unexpected length: %v", dataLength)
@@ -70,16 +71,16 @@ func trimEPOData(data []byte) []byte {
 	return data[:(epoSetsCount * epoLength)]
 }
 
-// main retrieves EPO data, checks it, cleans it and writes it to disk.
-func main() {
+// downloadFileEPO retrieves EPO data, checks it, cleans it and writes it to disk.
+func downloadFileEPO() {
 	fmt.Println("Retrieving EPO data from Mediatek's servers...")
-	rawEPOData, err := retrieveData()
+	rawEPOData, err := retrieveDataEPO()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println("Processing EPO.BIN...")
-	err = checkDataLength(rawEPOData)
+	err = checkDataLengthEPO(rawEPOData)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,4 +92,68 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("Done! EPO.BIN saved.")
+}
+
+
+// retrieveData makes a HTTP request to get Garmin EPO data and returns the body as []byte if successful.
+func retrieveDataCPE() ([]byte, error) {
+	url := "https://api.gcs.garmin.com/ephemeris/cpe/sony?coverage=WEEKS_1"
+
+	c := &http.Client{
+		Timeout: 20 * time.Second,
+	}
+	resp, err := c.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return body, nil
+}
+
+// checkDataLengthCPE errors out of CPE data is empty
+// - CPE internal data format is not yet known
+func checkDataLengthCPE(data []byte) error {
+	dataLength := len(data)
+	if dataLength == 0 {
+		return fmt.Errorf("CPE data has unexpected length of zero")
+	}
+	return nil
+}
+
+// Retrieves CPE data, checks it and writes it to disk.
+func downloadFileCPE() {
+	fmt.Println("Retrieving CPE data from Garmin's servers...\n")
+	rawCPEData, err := retrieveDataCPE()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = checkDataLengthCPE(rawCPEData)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = ioutil.WriteFile("CPE.BIN", rawCPEData, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Done! CPE.BIN saved.\n")
+}
+
+
+func main() {
+	var modeCPE bool
+	flag.BoolVar(&modeCPE, "cpe", false, "Download CPE format ephemeris data (instead of EPO)")
+	flag.Parse()
+
+	if modeCPE == true {
+		downloadFileCPE()
+	} else {
+		downloadFileEPO()
+	}
 }
