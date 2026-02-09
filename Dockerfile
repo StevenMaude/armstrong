@@ -1,4 +1,4 @@
-FROM golang:1.25.5-alpine
+FROM golang:1.25.7-alpine
 
 USER nobody:nogroup
 
